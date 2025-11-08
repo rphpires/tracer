@@ -18,27 +18,34 @@ func main() {
 	// Or just set the user ID
 	tracer.SetUserID("User456")
 
-	// Basic trace (white color)
+	// Basic trace (white color) - single argument
 	tracer.Trace("Application started")
 
-	// Trace with formatting (like fmt.Printf)
+	// Trace with multiple arguments (like fmt.Println)
 	count := 10
+	tracer.Trace("Processing", count, "items from database")
+	tracer.Trace("User", "John", "logged in at", time.Now().Format("15:04:05"))
+
+	// Trace with formatting (like fmt.Printf)
 	tracer.Tracef("Processing %d items", count)
 	tracer.Tracef("User %s logged in at %v", "John", time.Now().Format("15:04:05"))
 
-	// Trace with custom color
-	tracer.TraceWithColor("Processing request...", "lightblue")
+	// Trace with custom color - multiple arguments
+	port := 8080
+	tracer.TraceWithColor("lightblue", "Server listening on port", port)
+	tracer.TraceWithColor("lightgreen", "Connection", "established", "successfully")
 
 	// Trace with custom color and formatting
-	port := 8080
 	tracer.TraceWithColorf("lightgreen", "Server started on port %d", port)
 	tracer.TraceWithColorf("yellow", "Memory usage: %.2f MB", 125.67)
 
-	// Error message (red color)
-	tracer.Error("Failed to connect to database")
+	// Error message (red color) - multiple arguments
+	tracer.Error("Failed to connect to database:", "timeout")
+	tracer.Error("Connection error:", port, "unreachable")
 
 	// Session error (LightSalmon color)
 	tracer.TraceSessionError("Session timeout occurred")
+	tracer.TraceSessionError("User", "session", "expired after", 30, "minutes")
 
 	// Example with panic recovery
 	riskyOperation()

@@ -1,5 +1,9 @@
 # Tracer - HTML Logging Library for Go
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/rphpires/tracer)](https://goreportcard.com/report/github.com/rphpires/tracer)
+[![GoDoc](https://godoc.org/github.com/rphpires/tracer?status.svg)](https://godoc.org/github.com/rphpires/tracer)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 A simple and elegant logging library for Go that generates colorful HTML log files with automatic rotation and filtering capabilities.
 
 ## Features
@@ -39,14 +43,17 @@ func main() {
     // Simple trace message (white color)
     tracer.Trace("Application started")
 
+    // Multiple arguments (like fmt.Println)
+    tracer.Trace("Processing", 10, "items from database")
+
     // Trace with custom color
-    tracer.TraceWithColor("Processing...", "lightblue")
+    tracer.TraceWithColor("lightblue", "Server started on port", 8080)
 
     // Error message (red color)
-    tracer.Error("Something went wrong")
+    tracer.Error("Connection failed:", "timeout")
 
     // Session error (LightSalmon color)
-    tracer.TraceSessionError("Session timeout")
+    tracer.TraceSessionError("Session timeout after", 30, "minutes")
 }
 ```
 
@@ -73,11 +80,13 @@ tracer.SetConfig(tracer.Config{
 
 ### Main Functions
 
-#### `Trace(message string)`
-Logs a message with white color.
+#### `Trace(a ...any)`
+Logs values with white color (like `fmt.Println`). Multiple arguments are separated by spaces.
 
 ```go
 tracer.Trace("Operation completed")
+tracer.Trace("Processing", 42, "items from database")
+tracer.Trace("User", "John", "logged in")
 ```
 
 #### `Tracef(format string, a ...any)`
@@ -88,13 +97,13 @@ tracer.Tracef("Processing %d items", 10)
 tracer.Tracef("User %s logged in at %v", "John", time.Now())
 ```
 
-#### `TraceWithColor(message, color string)`
-Logs a message with a specified HTML color.
+#### `TraceWithColor(color string, a ...any)`
+Logs values with a specified HTML color (like `fmt.Println`). Multiple arguments are separated by spaces.
 
 ```go
-tracer.TraceWithColor("Warning: Low memory", "yellow")
-tracer.TraceWithColor("Success!", "lightgreen")
-tracer.TraceWithColor("Processing...", "cyan")
+tracer.TraceWithColor("yellow", "Warning: Low memory")
+tracer.TraceWithColor("lightgreen", "Success!", "Data saved")
+tracer.TraceWithColor("cyan", "Processing", 10, "requests")
 ```
 
 #### `TraceWithColorf(color string, format string, a ...any)`
@@ -108,15 +117,16 @@ tracer.TraceWithColorf("cyan", "Connected to %s:%d", "localhost", 5432)
 
 Supported colors include: `white`, `red`, `lightgreen`, `lightblue`, `yellow`, `cyan`, `orange`, `pink`, `LightSalmon`, etc. Any valid HTML color name or hex code works.
 
-#### `Error(message string)`
-Logs an error message in red color with "**" prefix.
+#### `Error(a ...any)`
+Logs an error message in red color with "**" prefix (like `fmt.Println`).
 
 ```go
 tracer.Error("Database connection failed")
+tracer.Error("Connection error:", port, "unreachable")
 ```
 
-#### `TraceSessionError(message string)`
-Logs a session error message in LightSalmon color with "**" prefix.
+#### `TraceSessionError(a ...any)`
+Logs a session error message in LightSalmon color with "**" prefix (like `fmt.Println`).
 
 ```go
 tracer.TraceSessionError("Session expired")
@@ -255,10 +265,64 @@ Simply remove or rename the enable files:
 
 When disabled, trace calls only print to stdout but don't write to files.
 
-## License
+## Testing
 
-MIT License
+Run the test suite:
+
+```bash
+# Run all tests
+go test -v
+
+# Run tests with coverage
+go test -v -cover
+
+# Run specific test
+go test -v -run TestTracef
+```
+
+## Development
+
+### Building the Example
+
+```bash
+cd example
+go build
+./example  # or example.exe on Windows
+```
+
+### Code Quality
+
+```bash
+# Format code
+go fmt ./...
+
+# Vet code
+go vet ./...
+
+# Run linter (if installed)
+golangci-lint run
+```
+
+## Versioning
+
+This project follows [Semantic Versioning](https://semver.org/).
+
+To install a specific version:
+
+```bash
+# Install latest version
+go get github.com/rphpires/tracer@latest
+
+# Install specific version
+go get github.com/rphpires/tracer@v1.0.0
+```
+
+See [VERSIONING.md](VERSIONING.md) for detailed versioning information.
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
+
+## License
+
+MIT License

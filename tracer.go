@@ -264,18 +264,36 @@ func isTraceEnabled() bool {
 	return false
 }
 
-// Trace writes a message to the trace log with white color
-func Trace(message string) {
-	TraceWithColor(message, "white")
+// Trace writes values to the trace log with white color (like fmt.Println)
+// Multiple arguments are separated by spaces.
+func Trace(a ...any) {
+	message := fmt.Sprintln(a...)
+	// Remove the trailing newline added by Sprintln
+	message = message[:len(message)-1]
+	traceWithColorInternal(message, "white")
 }
 
 // Tracef writes a formatted message to the trace log with white color (like fmt.Printf)
 func Tracef(format string, a ...any) {
-	TraceWithColor(fmt.Sprintf(format, a...), "white")
+	traceWithColorInternal(fmt.Sprintf(format, a...), "white")
 }
 
-// TraceWithColor writes a message to the trace log with a specified color
-func TraceWithColor(message, color string) {
+// TraceWithColor writes values to the trace log with a specified color (like fmt.Println)
+// Multiple arguments are separated by spaces.
+func TraceWithColor(color string, a ...any) {
+	message := fmt.Sprintln(a...)
+	// Remove the trailing newline added by Sprintln
+	message = message[:len(message)-1]
+	traceWithColorInternal(message, color)
+}
+
+// TraceWithColorf writes a formatted message to the trace log with a specified color (like fmt.Printf)
+func TraceWithColorf(color string, format string, a ...any) {
+	traceWithColorInternal(fmt.Sprintf(format, a...), color)
+}
+
+// traceWithColorInternal is the internal implementation that writes a message to the trace log
+func traceWithColorInternal(message, color string) {
 	fmt.Println(message)
 
 	if !isTraceEnabled() {
@@ -339,11 +357,6 @@ func TraceWithColor(message, color string) {
 	}
 }
 
-// TraceWithColorf writes a formatted message to the trace log with a specified color (like fmt.Printf)
-func TraceWithColorf(color string, format string, a ...any) {
-	TraceWithColor(fmt.Sprintf(format, a...), color)
-}
-
 // ReportException reports a panic/exception with stack trace
 func ReportException(err interface{}) {
 	stackTrace := string(debug.Stack())
@@ -352,18 +365,26 @@ func ReportException(err interface{}) {
 	stackTrace = strings.ReplaceAll(stackTrace, "<", "&lt;")
 	stackTrace = strings.ReplaceAll(stackTrace, ">", "&gt;")
 
-	TraceWithColor(fmt.Sprintf("Bypassing exception (%v)", err), "red")
-	TraceWithColor(fmt.Sprintf("**** Exception: <code>%s</code>", stackTrace), "red")
+	traceWithColorInternal(fmt.Sprintf("Bypassing exception (%v)", err), "red")
+	traceWithColorInternal(fmt.Sprintf("**** Exception: <code>%s</code>", stackTrace), "red")
 }
 
-// Error writes an error message to the trace log in red
-func Error(message string) {
-	TraceWithColor(fmt.Sprintf("** %s", message), "red")
+// Error writes an error message to the trace log in red (like fmt.Println)
+// Multiple arguments are separated by spaces and prefixed with "**"
+func Error(a ...any) {
+	message := fmt.Sprintln(a...)
+	// Remove the trailing newline added by Sprintln
+	message = message[:len(message)-1]
+	traceWithColorInternal(fmt.Sprintf("** %s", message), "red")
 }
 
-// TraceSessionError writes a session error message to the trace log in LightSalmon color
-func TraceSessionError(message string) {
-	TraceWithColor(fmt.Sprintf("** %s", message), "LightSalmon")
+// TraceSessionError writes a session error message to the trace log in LightSalmon color (like fmt.Println)
+// Multiple arguments are separated by spaces and prefixed with "**"
+func TraceSessionError(a ...any) {
+	message := fmt.Sprintln(a...)
+	// Remove the trailing newline added by Sprintln
+	message = message[:len(message)-1]
+	traceWithColorInternal(fmt.Sprintf("** %s", message), "LightSalmon")
 }
 
 // RecoverPanic should be used with defer to catch panics and log them
