@@ -80,6 +80,14 @@ Logs a message with white color.
 tracer.Trace("Operation completed")
 ```
 
+#### `Tracef(format string, a ...any)`
+Logs a formatted message with white color (like `fmt.Printf`).
+
+```go
+tracer.Tracef("Processing %d items", 10)
+tracer.Tracef("User %s logged in at %v", "John", time.Now())
+```
+
 #### `TraceWithColor(message, color string)`
 Logs a message with a specified HTML color.
 
@@ -87,6 +95,15 @@ Logs a message with a specified HTML color.
 tracer.TraceWithColor("Warning: Low memory", "yellow")
 tracer.TraceWithColor("Success!", "lightgreen")
 tracer.TraceWithColor("Processing...", "cyan")
+```
+
+#### `TraceWithColorf(color string, format string, a ...any)`
+Logs a formatted message with a specified HTML color (like `fmt.Printf`).
+
+```go
+tracer.TraceWithColorf("lightgreen", "Server started on port %d", 8080)
+tracer.TraceWithColorf("yellow", "Memory usage: %.2f MB", 125.67)
+tracer.TraceWithColorf("cyan", "Connected to %s:%d", "localhost", 5432)
 ```
 
 Supported colors include: `white`, `red`, `lightgreen`, `lightblue`, `yellow`, `cyan`, `orange`, `pink`, `LightSalmon`, etc. Any valid HTML color name or hex code works.

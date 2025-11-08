@@ -1,10 +1,9 @@
 package main
 
 import (
-	"fmt"
 	"time"
 
-	"github.com/yourusername/tracer"
+	"github.com/rphpires/tracer"
 )
 
 func main() {
@@ -22,8 +21,18 @@ func main() {
 	// Basic trace (white color)
 	tracer.Trace("Application started")
 
+	// Trace with formatting (like fmt.Printf)
+	count := 10
+	tracer.Tracef("Processing %d items", count)
+	tracer.Tracef("User %s logged in at %v", "John", time.Now().Format("15:04:05"))
+
 	// Trace with custom color
 	tracer.TraceWithColor("Processing request...", "lightblue")
+
+	// Trace with custom color and formatting
+	port := 8080
+	tracer.TraceWithColorf("lightgreen", "Server started on port %d", port)
+	tracer.TraceWithColorf("yellow", "Memory usage: %.2f MB", 125.67)
 
 	// Error message (red color)
 	tracer.Error("Failed to connect to database")
@@ -60,7 +69,7 @@ func riskyOperation() {
 func workerWithRecovery(id int) {
 	defer tracer.RecoverPanic()
 
-	tracer.TraceWithColor(fmt.Sprintf("Worker %d started", id), "lightgreen")
+	tracer.TraceWithColorf("lightgreen", "Worker %d started", id)
 
 	// Do some work...
 	time.Sleep(100 * time.Millisecond)
@@ -71,5 +80,5 @@ func workerWithRecovery(id int) {
 		// panic(fmt.Sprintf("Worker %d encountered an error", id))
 	}
 
-	tracer.TraceWithColor(fmt.Sprintf("Worker %d finished", id), "lightgreen")
+	tracer.TraceWithColorf("lightgreen", "Worker %d finished", id)
 }

@@ -269,6 +269,11 @@ func Trace(message string) {
 	TraceWithColor(message, "white")
 }
 
+// Tracef writes a formatted message to the trace log with white color (like fmt.Printf)
+func Tracef(format string, a ...any) {
+	TraceWithColor(fmt.Sprintf(format, a...), "white")
+}
+
 // TraceWithColor writes a message to the trace log with a specified color
 func TraceWithColor(message, color string) {
 	fmt.Println(message)
@@ -332,6 +337,11 @@ func TraceWithColor(message, color string) {
 		logFile = newLogFile(logFilename, defaultConfig.MaxSize)
 		logFile.write(logEntry)
 	}
+}
+
+// TraceWithColorf writes a formatted message to the trace log with a specified color (like fmt.Printf)
+func TraceWithColorf(color string, format string, a ...any) {
+	TraceWithColor(fmt.Sprintf(format, a...), color)
 }
 
 // ReportException reports a panic/exception with stack trace
